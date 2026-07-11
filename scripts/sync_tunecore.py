@@ -180,6 +180,12 @@ def update_index_html(tracks: list[dict]) -> None:
     html = re.sub(r'(<p class="release-date">)[^<]*(</p>)', rf"\g<1>{release_date_label}\g<2>", html)
     target_iso = f"{latest['releaseDate']}T00:00:00+09:00"
     html = re.sub(r'(data-target=")[^"]*(")', rf"\g<1>{target_iso}\g<2>", html)
+    title_escaped = latest["title"].replace("&", "&amp;").replace('"', "&quot;")
+    html = re.sub(
+        r'<img src="[^"]*" alt="[^"]*" class="release-art" id="releaseArt">',
+        f'<img src="{latest["jacket"]}" alt="{title_escaped} ジャケット" class="release-art" id="releaseArt">',
+        html,
+    )
 
     INDEX_HTML.write_text(html, encoding="utf-8")
 
