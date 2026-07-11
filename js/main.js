@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initReveal();
   initCountdown();
   initFooterYear();
-  initContactForm();
 });
 
 // --- header: add background once scrolled past the hero -------------------------------
@@ -129,26 +128,4 @@ function initCountdown() {
 function initFooterYear() {
   const el = document.getElementById("year");
   if (el) el.textContent = new Date().getFullYear();
-}
-
-// --- contact form -------------------------------------------------------------
-function initContactForm() {
-  const form = document.getElementById("contactForm");
-  const note = document.getElementById("formNote");
-  if (!form) return;
-
-  form.addEventListener("submit", (event) => {
-    const action = form.getAttribute("action") || "";
-
-    // フォーム送信サービス（Formspreeなど）が未設定の場合は案内を表示して送信をブロックする
-    if (action.includes("your-form-id")) {
-      event.preventDefault();
-      note.textContent = "フォームの送信先が未設定です。Formspree等でエンドポイントを取得し、index.html の action 属性を差し替えてください。";
-      note.style.color = "#ff6a3d";
-      return;
-    }
-
-    note.textContent = "送信中...";
-    note.style.color = "";
-  });
 }

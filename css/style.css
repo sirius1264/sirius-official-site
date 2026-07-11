@@ -605,39 +605,44 @@ button { font: inherit; cursor: pointer; }
   margin-bottom: 44px;
 }
 
-.contact-form {
-  display: grid;
-  gap: 26px;
-  max-width: 620px;
+.contact-dm-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 480px;
+  padding: 24px 28px;
+  background: var(--bg-alt);
+  border-radius: var(--radius-lg);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
 }
 
-.form-row { display: flex; flex-direction: column; gap: 8px; }
+.contact-dm-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+  background: radial-gradient(circle at 30% 110%, #ffdb73, #fd5949 30%, #d6249f 55%, #285aeb 85%);
+  color: #fff;
+}
 
-.form-row label {
-  font-size: 0.85rem;
-  font-weight: 500;
+.contact-dm-icon { width: 34px; height: 34px; flex-shrink: 0; }
+
+.contact-dm-text { display: flex; flex-direction: column; gap: 2px; }
+
+.contact-dm-title { font-size: 1.05rem; font-weight: 600; }
+
+.contact-dm-handle {
+  font-size: 0.88rem;
   color: var(--ink-secondary);
 }
 
-.form-row input, .form-row textarea {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  padding: 12px 2px;
-  color: var(--ink);
-  font-family: var(--ff);
-  font-size: 1.05rem;
-  resize: vertical;
-  transition: border-color 0.2s ease;
+.contact-dm-card:hover .contact-dm-handle { color: rgba(255, 255, 255, 0.85); }
+
+.contact-dm-arrow {
+  margin-left: auto;
+  font-size: 1.3rem;
+  transition: transform 0.25s ease;
 }
 
-.form-row input:focus, .form-row textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.contact-form .btn { justify-self: start; border: none; margin-top: 6px; }
+.contact-dm-card:hover .contact-dm-arrow { transform: translateX(6px); }
 
 .form-note { font-size: 0.88rem; color: var(--ink-secondary); min-height: 1.5em; }
 
