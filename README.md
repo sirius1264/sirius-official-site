@@ -18,6 +18,10 @@
 - 手動で今すぐ実行したい場合: GitHub の Actions タブ → 「Sync TuneCore」→ Run workflow
 - ローカルで試す場合: `python scripts/sync_tunecore.py`
 - 実行間隔を変えたい場合: `.github/workflows/sync.yml` の `cron` を編集
+- TuneCoreには載っているが**サイトには出したくない曲**がある場合(例: 過去の古い曲など)は、
+  `data/tracks.json` から該当曲を消すだけでは次回の自動実行で復活してしまいます。
+  `data/excluded_tracks.json` にその曲の linkco.re のハッシュ(URLの末尾、例 `https://linkco.re/XXXXXXXX` の `XXXXXXXX` 部分)
+  を追記してください。以後、自動同期はその曲を無視します。
 
 TuneCore に公式APIは無いため、ページに埋め込まれたデータを解析する非公式な方法です。
 TuneCore側のサイト実装が変わると動かなくなる可能性があります。その場合は

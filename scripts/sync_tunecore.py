@@ -18,6 +18,7 @@ from pathlib import Path
 ARTIST_URL = "https://www.tunecore.co.jp/artists?id=666152"
 ROOT = Path(__file__).resolve().parent.parent
 TRACKS_JSON = ROOT / "data" / "tracks.json"
+EXCLUDED_JSON = ROOT / "data" / "excluded_tracks.json"
 INDEX_HTML = ROOT / "index.html"
 JACKETS_DIR = ROOT / "images" / "jackets"
 
@@ -113,6 +114,13 @@ def load_known_tracks() -> list[dict]:
     return []
 
 
+def load_excluded_hashes() -> set[str]:
+    """手動でサイトから外した曲のハッシュ一覧。次回の自動同期で復活させないための除外リスト。"""
+    if EXCLUDED_JSON.exists():
+        return set(json.loads(EXCLUDED_JSON.read_text(encoding="utf-8")))
+    return set()
+
+
 def known_hashes(known: list[dict]) -> set[str]:
     return {hash_of(t["linkUrl"]) for t in known}
 
@@ -201,8 +209,12 @@ def main() -> int:
 
     known = load_known_tracks()
     existing_hashes = known_hashes(known)
+    excluded_hashes = load_excluded_hashes()
 
-    new_tracks = [t for t in scraped if t["hash"] not in existing_hashes]
+    new_tracks = [
+        t for t in scraped
+        if t["hash"] not in existing_hashes and t["hash"] not in excluded_hashes
+    ]
     if not new_tracks:
         print("No new tracks. Nothing to do.")
         return 0
