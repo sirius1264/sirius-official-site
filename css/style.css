@@ -237,6 +237,8 @@ button { font: inherit; cursor: pointer; }
   max-width: 34ch;
 }
 
+.hero-copy-break { display: none; }
+
 .hero-content .btn-primary { background: #fff; color: #000; }
 
 .hero-follow {
@@ -665,6 +667,7 @@ button { font: inherit; cursor: pointer; }
 
 @media (max-width: 640px) {
   .hero-follow { overflow-x: auto; }
+  .hero-copy-break { display: block; }
 }
 
 @media (max-width: 480px) {
