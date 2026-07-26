@@ -11,7 +11,6 @@ Next.js のデータ(JSON文字列)を正規表現で読み取っている。Tun
 import json
 import re
 import sys
-import urllib.parse
 import urllib.request
 from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
@@ -41,6 +40,46 @@ ARTWORK_PAT = re.compile(
 )
 
 WINDOW = 2500
+
+# 曲ごとの配信リンクボタン。表示順もここで決まる。
+# slug = linkco.re ページ内の /to/{slug}/{数字ID} のサービスキー
+SERVICES = [
+    {
+        "slug": "apple_music",
+        "key": "appleMusic",
+        "label": "Apple Musicで聴く",
+        "css": "apple",
+        "icon": '<path d="M17.05 12.5c-.03-2.6 2.13-3.85 2.23-3.92-1.22-1.78-3.11-2.02-3.78-2.05-1.6-.16-3.13.95-3.95.95-.82 0-2.08-.93-3.43-.9-1.76.03-3.4 1.03-4.3 2.6-1.84 3.2-.47 7.92 1.32 10.51.87 1.27 1.92 2.7 3.3 2.65 1.33-.05 1.83-.86 3.43-.86 1.6 0 2.05.86 3.44.83 1.42-.02 2.32-1.29 3.19-2.56.99-1.45 1.4-2.86 1.42-2.93-.03-.02-2.74-1.05-2.77-4.32zM14.6 4.9c.73-.88 1.22-2.1 1.09-3.32-1.05.04-2.33.7-3.08 1.58-.68.78-1.27 2.03-1.11 3.22 1.16.09 2.36-.59 3.1-1.48z"/>',
+    },
+    {
+        "slug": "spotify",
+        "key": "spotify",
+        "label": "Spotifyで聴く",
+        "css": "spotify",
+        "icon": '<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.6.6 0 0 1-.83.2c-2.27-1.39-5.13-1.7-8.5-.93a.6.6 0 1 1-.27-1.17c3.69-.84 6.86-.48 9.4 1.07.29.18.38.55.2.83zm1.22-2.72a.75.75 0 0 1-1.03.25c-2.6-1.6-6.56-2.06-9.63-1.13a.75.75 0 1 1-.44-1.44c3.51-1.06 7.87-.55 10.85 1.29.36.22.47.68.25 1.03zm.1-2.83c-3.12-1.85-8.27-2.02-11.25-1.12a.9.9 0 1 1-.52-1.72c3.42-1.03 9.1-.83 12.68 1.28a.9.9 0 1 1-.91 1.56z"/>',
+    },
+    {
+        "slug": "youtube_music_key",
+        "key": "youtubeMusic",
+        "label": "YouTube Musicで聴く",
+        "css": "youtube",
+        "icon": '<path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/>',
+    },
+    {
+        "slug": "line",
+        "key": "lineMusic",
+        "label": "LINE MUSICで聴く",
+        "css": "line",
+        "icon": '<path d="M12 2C6.48 2 2 5.58 2 10c0 3.96 3.58 7.27 8.42 7.9.33.07.77.22.88.5.1.26.07.66.03.92l-.14.86c-.04.26-.2 1 .87.55s5.78-3.4 7.89-5.83C21.3 12.6 22 11.37 22 10c0-4.42-4.48-8-10-8zm-3.6 10.4H6.2a.4.4 0 0 1-.4-.4V7.6a.6.6 0 0 1 1.2 0v3.6h1.4a.6.6 0 0 1 0 1.2zm2.2-.6a.6.6 0 0 1-1.2 0V7.6a.6.6 0 0 1 1.2 0v4.2zm5.4 0a.6.6 0 0 1-1.03.42l-2.17-2.7v2.28a.6.6 0 0 1-1.2 0V7.6a.6.6 0 0 1 1.03-.42l2.17 2.7V7.6a.6.6 0 0 1 1.2 0v4.2zm3.6 0a.6.6 0 0 1-.6.6h-1.8a.4.4 0 0 1-.4-.4V7.6a.6.6 0 0 1 1.2 0v3.6h1a.6.6 0 0 1 .6.6z"/>',
+    },
+    {
+        "slug": "amazon_music_unlimited",
+        "key": "amazonMusic",
+        "label": "Amazon Musicで聴く",
+        "css": "amazon",
+        "icon": '<path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>',
+    },
+]
 
 
 def fetch(url: str) -> bytes:
@@ -148,6 +187,44 @@ def download_artwork(url: str, hash_: str) -> str | None:
     dest = JACKETS_DIR / f"{hash_}{'.png' if is_png else '.jpg'}"
     dest.write_bytes(data)
     return f"images/jackets/{dest.name}"
+
+
+STORE_ID_PAT = {
+    s["slug"]: re.compile(rf'to/{re.escape(s["slug"])}/(\d+)') for s in SERVICES
+}
+
+
+def fetch_service_links(link_url: str) -> dict[str, str]:
+    """曲の linkco.re ページから、各配信サービスへの直リンク(TuneCoreのリダイレクトURL)を取得する。
+    JSで描画される部分ではなく静的HTMLに直接埋め込まれているため通常のHTTP取得で読み取れる。"""
+    try:
+        html = fetch(link_url).decode("utf-8", errors="replace")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] failed to fetch linkco.re page {link_url}: {exc}", file=sys.stderr)
+        return {}
+
+    links: dict[str, str] = {}
+    for service in SERVICES:
+        m = STORE_ID_PAT[service["slug"]].search(html)
+        if m:
+            links[service["key"]] = f"https://www.tunecore.co.jp/to/{service['slug']}/{m.group(1)}"
+    return links
+
+
+def ensure_service_links(tracks: list[dict]) -> bool:
+    """serviceLinks が未取得の曲があれば linkco.re から取得して補う。1件でも更新したら True を返す。"""
+    changed = False
+    for t in tracks:
+        if t.get("serviceLinks"):
+            continue
+        print(f"Fetching service links for '{t['title']}' ...")
+        links = fetch_service_links(t["linkUrl"])
+        if links:
+            t["serviceLinks"] = links
+            changed = True
+        else:
+            print(f"[warn] no service links found for '{t['title']}'", file=sys.stderr)
+    return changed
 
 
 def track_hash(track: dict) -> str:
@@ -266,18 +343,7 @@ TRACK_PAGE_TEMPLATE = """<!DOCTYPE html>
   </section>
 
   <div class="track-page-buttons">
-    <a class="track-page-btn track-page-btn-spotify" href="{spotify_url}" target="_blank" rel="noopener">
-      <svg class="track-page-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.6.6 0 0 1-.83.2c-2.27-1.39-5.13-1.7-8.5-.93a.6.6 0 1 1-.27-1.17c3.69-.84 6.86-.48 9.4 1.07.29.18.38.55.2.83zm1.22-2.72a.75.75 0 0 1-1.03.25c-2.6-1.6-6.56-2.06-9.63-1.13a.75.75 0 1 1-.44-1.44c3.51-1.06 7.87-.55 10.85 1.29.36.22.47.68.25 1.03zm.1-2.83c-3.12-1.85-8.27-2.02-11.25-1.12a.9.9 0 1 1-.52-1.72c3.42-1.03 9.1-.83 12.68 1.28a.9.9 0 1 1-.91 1.56z"/></svg>
-      <span>Spotifyで検索</span>
-    </a>
-    <a class="track-page-btn track-page-btn-apple" href="{apple_url}" target="_blank" rel="noopener">
-      <svg class="track-page-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 12.5c-.03-2.6 2.13-3.85 2.23-3.92-1.22-1.78-3.11-2.02-3.78-2.05-1.6-.16-3.13.95-3.95.95-.82 0-2.08-.93-3.43-.9-1.76.03-3.4 1.03-4.3 2.6-1.84 3.2-.47 7.92 1.32 10.51.87 1.27 1.92 2.7 3.3 2.65 1.33-.05 1.83-.86 3.43-.86 1.6 0 2.05.86 3.44.83 1.42-.02 2.32-1.29 3.19-2.56.99-1.45 1.4-2.86 1.42-2.93-.03-.02-2.74-1.05-2.77-4.32zM14.6 4.9c.73-.88 1.22-2.1 1.09-3.32-1.05.04-2.33.7-3.08 1.58-.68.78-1.27 2.03-1.11 3.22 1.16.09 2.36-.59 3.1-1.48z"/></svg>
-      <span>Apple Musicで検索</span>
-    </a>
-    <a class="track-page-btn track-page-btn-youtube" href="{youtube_url}" target="_blank" rel="noopener">
-      <svg class="track-page-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
-      <span>YouTube Musicで検索</span>
-    </a>
+{buttons_html}
     <a class="track-page-btn track-page-btn-more" href="{link_url}" target="_blank" rel="noopener">
       その他の配信サービスはこちら
     </a>
@@ -302,17 +368,30 @@ TRACK_PAGE_TEMPLATE = """<!DOCTYPE html>
 """
 
 
+def render_service_buttons(track: dict) -> str:
+    links = track.get("serviceLinks") or {}
+    buttons = []
+    for service in SERVICES:
+        url = links.get(service["key"])
+        if not url:
+            continue
+        buttons.append(
+            f'    <a class="track-page-btn track-page-btn-{service["css"]}" href="{url}" target="_blank" rel="noopener">\n'
+            f'      <svg class="track-page-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{service["icon"]}</svg>\n'
+            f'      <span>{service["label"]}</span>\n'
+            f"    </a>"
+        )
+    return "\n".join(buttons)
+
+
 def render_track_page(track: dict) -> str:
-    query = urllib.parse.quote(f"Sirius {track['title']}")
     d = date.fromisoformat(track["releaseDate"])
 
     return TRACK_PAGE_TEMPLATE.format(
         title=escape_html(track["title"]),
         jacket=track["jacket"],
         date_label=d.strftime("%Y.%m.%d"),
-        spotify_url=f"https://open.spotify.com/search/{query}",
-        apple_url=f"https://music.apple.com/jp/search?term={query}",
-        youtube_url=f"https://music.youtube.com/search?q={query}",
+        buttons_html=render_service_buttons(track),
         link_url=track["linkUrl"],
     )
 
@@ -325,13 +404,20 @@ def write_track_pages(tracks: list[dict]) -> None:
 
 
 def regenerate_all() -> int:
-    """TuneCoreへは問い合わせず、既存の data/tracks.json から
+    """TuneCoreの曲一覧そのものへは問い合わせず、既存の data/tracks.json から
     index.html・music.html・曲ごとのページを全て再生成する
-    (テンプレートを直した後や、初回のバックフィルに使う)。"""
+    (テンプレートを直した後や、初回のバックフィルに使う)。
+    ただし各曲の配信サービスリンクがまだ無い場合は linkco.re から取得する。"""
     known = load_known_tracks()
     if not known:
         print("[error] data/tracks.json is empty", file=sys.stderr)
         return 1
+
+    if ensure_service_links(known):
+        TRACKS_JSON.write_text(
+            json.dumps(known, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+
     update_index_html(known)
     update_music_html(known)
     write_track_pages(known)
@@ -383,6 +469,8 @@ def main() -> int:
     if len(updated) == len(known):
         print("No track could be added (all downloads failed). Nothing to commit.")
         return 0
+
+    ensure_service_links(updated)
 
     updated.sort(key=lambda t: t["releaseDate"], reverse=True)
     TRACKS_JSON.write_text(

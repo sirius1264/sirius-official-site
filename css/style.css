@@ -212,7 +212,7 @@ button { font: inherit; cursor: pointer; }
   flex-wrap: wrap;
 }
 
-.hero-main { max-width: 640px; }
+.hero-main { max-width: 640px; margin-bottom: 48px; }
 
 .hero-eyebrow {
   font-size: 0.9rem;
@@ -270,10 +270,12 @@ button { font: inherit; cursor: pointer; }
 
 .hero-follow-name { font-size: 0.68rem; font-weight: 600; }
 
-.hero-follow-handle {
-  font-size: 0.58rem;
-  color: rgba(255, 255, 255, 0.6);
-  white-space: nowrap;
+/* デスクトップ幅ではフォローアイコンを大きく表示する(モバイルはそのままのサイズ) */
+@media (min-width: 641px) {
+  .hero-follow { gap: 4px; padding: 14px; border-radius: 22px; }
+  .hero-follow-item { min-width: 84px; padding: 14px 16px; gap: 10px; }
+  .hero-follow-icon { width: 28px; height: 28px; }
+  .hero-follow-name { font-size: 0.82rem; }
 }
 
 .scroll-cue {
@@ -761,6 +763,8 @@ button { font: inherit; cursor: pointer; }
 .track-page-btn-spotify:hover { background: #1ed760; color: #04250f; }
 .track-page-btn-apple:hover { background: linear-gradient(135deg, #fa57c1, #4a17e0); color: #fff; }
 .track-page-btn-youtube:hover { background: #ff0000; color: #fff; }
+.track-page-btn-line:hover { background: #06c755; color: #fff; }
+.track-page-btn-amazon:hover { background: #232f3e; color: #ff9900; }
 
 .track-page-btn-more {
   background: transparent;

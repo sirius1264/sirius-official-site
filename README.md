@@ -7,9 +7,12 @@
 
 - `index.html`: トップページ。Hero(SNS/配信サービスのフォロー導線つき) → New Single → Music(最新曲ティーザー) → Goods → Profile+Contact
 - `music.html`: 全曲一覧ページ
-- `music/<ハッシュ>.html`: 曲ごとのランディングページ。ジャケット・Spotify/Apple Music/YouTube Musicの検索リンク・
-  「その他の配信サービスはこちら」(TuneCoreのスマートリンクへ)を掲載。Google Analyticsタグ入りなので、
-  Meta広告などのランディングページ先としてそのまま使えます
+- `music/<ハッシュ>.html`: 曲ごとのランディングページ。ジャケット・Apple Music/Spotify/YouTube Music/LINE MUSIC/Amazon Musicへの
+  直リンク・「その他の配信サービスはこちら」(TuneCoreのスマートリンクへ)を掲載。Google Analyticsタグ入りなので、
+  Meta広告などのランディングページ先としてそのまま使えます。各サービスへの直リンクは曲ごとの linkco.re ページに
+  静的に埋め込まれている TuneCore のリダイレクトURL(`tunecore.co.jp/to/{サービス}/{ID}`)を読み取って取得しており、
+  一度取得すると `data/tracks.json` の各曲の `serviceLinks` に保存されます(再取得はしません)。
+  配信開始前でリンクがまだ無い曲は、次回以降の自動同期で自動的に取得されます。
 
 ## 新曲の自動反映について
 
