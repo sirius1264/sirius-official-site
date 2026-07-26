@@ -205,7 +205,14 @@ button { font: inherit; cursor: pointer; }
   max-width: 1080px;
   margin: 0 auto;
   color: #fff;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
 }
+
+.hero-main { max-width: 640px; }
 
 .hero-eyebrow {
   font-size: 0.9rem;
@@ -232,6 +239,42 @@ button { font: inherit; cursor: pointer; }
 }
 
 .hero-content .btn-primary { background: #fff; color: #000; }
+
+.hero-follow {
+  display: flex;
+  gap: 2px;
+  background: rgba(10, 10, 14, 0.45);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  padding: 10px;
+}
+
+.hero-follow-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 64px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.hero-follow-item:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px); }
+
+.hero-follow-icon { width: 18px; height: 18px; }
+
+.hero-follow-name { font-size: 0.68rem; font-weight: 600; }
+
+.hero-follow-handle {
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
 
 .scroll-cue {
   position: absolute;
@@ -389,13 +432,6 @@ button { font: inherit; cursor: pointer; }
 
 .music { padding: 140px 0; background: var(--bg-alt); }
 
-.streaming-embed {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin-bottom: 56px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.1);
-}
-
 .track-grid-hint {
   color: var(--ink-secondary);
   font-size: 0.92rem;
@@ -487,119 +523,31 @@ button { font: inherit; cursor: pointer; }
 .track-card.is-disabled .track-info { padding: 14px 16px 16px; opacity: 0.6; }
 .track-card.is-disabled .track-name { color: var(--ink-secondary); }
 
-.platform-links {
-  display: flex;
-  gap: 14px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-
-.platform-links a {
-  padding: 11px 26px;
-  background: var(--bg);
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  box-shadow: 0 1px 0 var(--line);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.platform-links a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-
-/* ----------------------------------- follow ------------------------------------ */
-
-.follow {
-  padding: 140px 0;
-  background: var(--bg-dark);
-  color: #fff;
-  text-align: center;
-}
-
-.follow-eyebrow { color: var(--ink-invert-secondary); }
-
-.follow-title { color: #fff; }
-
-.follow-lead {
-  color: var(--ink-invert-secondary);
-  font-size: 1.1rem;
-  max-width: 46ch;
-  margin: -16px auto 56px;
-}
-
-.follow-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
-}
-
-.follow-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 36px 20px;
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--line-invert);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.follow-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: transparent;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
-}
-
-.follow-icon { width: 34px; height: 34px; }
-
-.follow-name { font-size: 1.05rem; font-weight: 600; }
-.follow-handle { font-size: 0.82rem; color: var(--ink-invert-secondary); }
-
-.follow-instagram:hover { background: radial-gradient(circle at 30% 110%, #ffdb73, #fd5949 30%, #d6249f 55%, #285aeb 85%); }
-.follow-tiktok:hover { background: linear-gradient(135deg, #25f4ee, #000 45%, #fe2c55); }
-.follow-youtube:hover { background: linear-gradient(135deg, #ff0000, #7a0000); }
-.follow-spotify:hover { background: linear-gradient(135deg, #1ed760, #14833f); }
-.follow-apple:hover { background: linear-gradient(135deg, #fa57c1, #4a17e0); }
-
-/* ------------------------------------ live ------------------------------------ */
-
-.live { padding: 140px 0; background: var(--bg); }
-
-.live-empty, .goods-empty {
-  padding: 56px;
-  text-align: center;
-  background: var(--bg-alt);
-  border-radius: var(--radius-lg);
-  color: var(--ink-secondary);
-}
-
-.live-empty p:first-child, .goods-empty p:first-child { color: var(--ink); font-weight: 500; font-size: 1.05rem; }
-
-.live-empty-sub, .goods-empty-sub {
-  color: var(--ink-secondary);
-  font-size: 0.92rem;
-  margin-top: 8px;
-}
-
-.live-item {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 22px 4px;
-  border-bottom: 1px solid var(--line);
-}
-
-.live-date { font-weight: 700; color: var(--accent); min-width: 120px; }
-.live-name { flex: 1; }
-.live-link { font-size: 0.85rem; color: var(--ink-secondary); border-bottom: 1px solid var(--ink-secondary); }
+.music-more { margin-top: 48px; text-align: center; }
 
 /* ----------------------------------- goods ------------------------------------ */
 
 .goods { padding: 140px 0; background: var(--bg-alt); }
 
+.goods-empty {
+  padding: 56px;
+  text-align: center;
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  color: var(--ink-secondary);
+}
+
+.goods-empty p:first-child { color: var(--ink); font-weight: 500; font-size: 1.05rem; }
+
+.goods-empty-sub {
+  color: var(--ink-secondary);
+  font-size: 0.92rem;
+  margin-top: 8px;
+}
+
 /* ---------------------------------- contact ------------------------------------ */
 
-.contact { padding: 140px 0; background: var(--bg); }
+.profile-contact { margin-top: 100px; }
 
 .contact-lead {
   color: var(--ink-secondary);
@@ -646,8 +594,6 @@ button { font: inherit; cursor: pointer; }
 }
 
 .contact-dm-card:hover .contact-dm-arrow { transform: translateX(6px); }
-
-.form-note { font-size: 0.88rem; color: var(--ink-secondary); min-height: 1.5em; }
 
 /* ----------------------------------- footer ------------------------------------ */
 
@@ -714,10 +660,114 @@ button { font: inherit; cursor: pointer; }
   .nav-toggle.is-open span { background: var(--ink) !important; }
 }
 
+@media (max-width: 640px) {
+  .hero-content { justify-content: flex-start; }
+  .hero-follow { max-width: 100%; overflow-x: auto; }
+}
+
 @media (max-width: 480px) {
   .countdown { gap: 8px; }
   .cd-block { min-width: 68px; padding: 14px 4px; }
   .cd-num { font-size: 1.7rem; }
-  .profile, .music, .live, .goods, .contact, .release, .follow { padding: 96px 0; }
+  .profile, .music, .goods, .release { padding: 96px 0; }
+  .profile-contact { margin-top: 72px; }
   .track-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+  .hero-follow-item { min-width: 56px; padding: 8px; }
 }
+
+/* ------------------------------- music (discography) page ------------------------------- */
+
+.music-page-hero {
+  padding: calc(var(--nav-h) + 72px) 0 56px;
+  background: var(--bg-alt);
+  text-align: center;
+}
+
+.music-page-hero .section-eyebrow { justify-content: center; }
+
+.music-page-list { padding: 72px 0 140px; background: var(--bg); }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-secondary);
+  margin-bottom: 24px;
+}
+
+.back-link:hover { color: var(--ink); }
+
+/* ------------------------------- track (per-song) page ------------------------------- */
+
+.track-page-header {
+  padding: calc(var(--nav-h) + 64px) 0 0;
+  text-align: center;
+}
+
+.track-page-art {
+  width: clamp(180px, 40vw, 280px);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  margin: 0 auto 32px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+}
+
+.track-page-title {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.track-page-artist {
+  color: var(--ink-secondary);
+  font-size: 1.05rem;
+  margin-top: 8px;
+}
+
+.track-page-date {
+  color: var(--ink-secondary);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.track-page-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+  margin: 48px auto 0;
+  padding: 0 24px 120px;
+}
+
+.track-page-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  background: var(--bg-alt);
+  font-weight: 600;
+  font-size: 0.98rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.track-page-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12); }
+
+.track-page-btn-icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+.track-page-btn-spotify:hover { background: #1ed760; color: #04250f; }
+.track-page-btn-apple:hover { background: linear-gradient(135deg, #fa57c1, #4a17e0); color: #fff; }
+.track-page-btn-youtube:hover { background: #ff0000; color: #fff; }
+
+.track-page-btn-more {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-secondary);
+  font-weight: 500;
+  justify-content: center;
+}
+
+.track-page-btn-more:hover { background: var(--bg-alt); transform: none; box-shadow: none; color: var(--ink); }

@@ -12,10 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // --- header: add background once scrolled past the hero -------------------------------
+// ヒーローが無いページ(music.html・曲個別ページ)では最初から scrolled 状態にする
 function initHeader() {
   const header = document.getElementById("siteHeader");
   const hero = document.querySelector(".hero");
-  const threshold = () => (hero ? hero.offsetHeight - header.offsetHeight : 20);
+  const threshold = () => (hero ? hero.offsetHeight - header.offsetHeight : -1);
   const onScroll = () => header.classList.toggle("scrolled", window.scrollY > threshold());
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -71,6 +72,7 @@ function initReveal() {
 function initNavToggle() {
   const toggle = document.getElementById("navToggle");
   const nav = document.getElementById("nav");
+  if (!toggle || !nav) return;
 
   toggle.addEventListener("click", () => {
     const isOpen = nav.classList.toggle("is-open");
