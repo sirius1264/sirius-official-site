@@ -206,13 +206,12 @@ button { font: inherit; cursor: pointer; }
   margin: 0 auto;
   color: #fff;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
 }
 
-.hero-main { max-width: 640px; margin-bottom: 48px; }
+.hero-main { max-width: 640px; }
 
 .hero-eyebrow {
   font-size: 0.9rem;
@@ -241,6 +240,8 @@ button { font: inherit; cursor: pointer; }
 .hero-content .btn-primary { background: #fff; color: #000; }
 
 .hero-follow {
+  align-self: center;
+  max-width: 100%;
   display: flex;
   gap: 2px;
   background: rgba(10, 10, 14, 0.45);
@@ -663,8 +664,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 @media (max-width: 640px) {
-  .hero-content { justify-content: flex-start; }
-  .hero-follow { max-width: 100%; overflow-x: auto; }
+  .hero-follow { overflow-x: auto; }
 }
 
 @media (max-width: 480px) {
