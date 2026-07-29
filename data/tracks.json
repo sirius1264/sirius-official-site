@@ -1,9 +1,25 @@
 [
   {
+    "title": "Rising Star",
+    "releaseDate": "2026-08-05",
+    "linkUrl": "https://linkco.re/8VGU0mTZ?lang=ja",
+    "jacket": "images/jackets/8VGU0mTZ.png",
+    "serviceLinks": {
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1876360"
+    }
+  },
+  {
     "title": "Life Loud",
     "releaseDate": "2026-07-29",
     "linkUrl": "https://linkco.re/EgBBrFH9?lang=ja",
-    "jacket": "images/jackets/EgBBrFH9.png"
+    "jacket": "images/jackets/EgBBrFH9.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1863623",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1863623",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1863623",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1863623",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1863623"
+    }
   },
   {
     "title": "Long Drive",
