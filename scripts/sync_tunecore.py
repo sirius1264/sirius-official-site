@@ -36,7 +36,9 @@ NAME_PAT = re.compile(r'"nameJa":"((?:[^"\\]|\\.)*)"')
 LINK_PAT = re.compile(r'"linkcore":\{[^}]*?"url":"(https://linkco\.re/[A-Za-z0-9]+)"')
 DATE_PAT = re.compile(r'"releaseDate":"(\d{4}-\d{2}-\d{2})"')
 ARTWORK_PAT = re.compile(
-    r'https://tcj-image-production\.s3-ap-northeast-1\.amazonaws\.com/[^"]+?\.(?:png|jpg|jpeg)\?[^"]*'
+    # ファイル名が "ite<数字>" のものだけがジャケット本体。"ita<数字>" 等の類似ファイルは
+    # 別用途の付随画像であり、これを拾うと無関係な画像になってしまう(実際に発生した不具合)。
+    r'https://tcj-image-production\.s3-ap-northeast-1\.amazonaws\.com/[^"]+?/ite\d+\.(?:png|jpg|jpeg)\?[^"]*'
 )
 
 WINDOW = 2500
@@ -212,17 +214,20 @@ def fetch_service_links(link_url: str) -> dict[str, str]:
 
 
 def ensure_service_links(tracks: list[dict]) -> bool:
-    """serviceLinks が未取得の曲があれば linkco.re から取得して補う。1件でも更新したら True を返す。"""
+    """serviceLinks が全サービス分揃っていない曲があれば linkco.re から取得し直す。
+    配信直後は一部サービスしかリンクが無いことがあるため、揃うまで毎回再取得を試みる。
+    1件でも更新したら True を返す。"""
     changed = False
     for t in tracks:
-        if t.get("serviceLinks"):
+        existing = t.get("serviceLinks") or {}
+        if len(existing) >= len(SERVICES):
             continue
         print(f"Fetching service links for '{t['title']}' ...")
         links = fetch_service_links(t["linkUrl"])
-        if links:
+        if links and links != existing:
             t["serviceLinks"] = links
             changed = True
-        else:
+        elif not links:
             print(f"[warn] no service links found for '{t['title']}'", file=sys.stderr)
     return changed
 
