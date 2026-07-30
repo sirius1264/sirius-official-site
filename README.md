@@ -25,7 +25,7 @@
 4. `music.html` の全曲一覧を更新
 5. `music/<ハッシュ>.html` を新規生成
 
-を行います。`.github/workflows/sync.yml` により毎日 06:00 JST に自動実行され、変更があれば
+を行います。`.github/workflows/sync.yml` により毎日 00:05 JST に自動実行され、変更があれば
 自動でコミット・push されます(GitHub Pages を有効化しておけば、push だけで公開サイトにも反映されます)。
 
 - 手動で今すぐ実行したい場合: GitHub の Actions タブ → 「Sync TuneCore」→ Run workflow

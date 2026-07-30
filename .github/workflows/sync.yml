@@ -2,7 +2,7 @@ name: Sync TuneCore
 
 on:
   schedule:
-    - cron: "0 21 * * *" # 毎日 06:00 JST
+    - cron: "5 15 * * *" # 毎日 00:05 JST
   workflow_dispatch: {}
 
 permissions:
