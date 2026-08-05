@@ -1,11 +1,21 @@
 [
   {
+    "title": "Summer edge",
+    "releaseDate": "2026-08-12",
+    "linkUrl": "https://linkco.re/7H5v9QNp?lang=ja",
+    "jacket": "images/jackets/7H5v9QNp.png"
+  },
+  {
     "title": "Rising Star",
     "releaseDate": "2026-08-05",
     "linkUrl": "https://linkco.re/8VGU0mTZ?lang=ja",
     "jacket": "images/jackets/8VGU0mTZ.png",
     "serviceLinks": {
-      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1876360"
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1876360",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1876360",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1876360",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1876360",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1876360"
     }
   },
   {
