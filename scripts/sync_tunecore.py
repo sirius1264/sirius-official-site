@@ -41,8 +41,6 @@ ARTWORK_PAT = re.compile(
     r'https://tcj-image-production\.s3-ap-northeast-1\.amazonaws\.com/[^"]+?/ite\d+\.(?:png|jpg|jpeg)\?[^"]*'
 )
 
-WINDOW = 2500
-
 # 曲ごとの配信リンクボタン。表示順もここで決まる。
 # slug = linkco.re ページ内の /to/{slug}/{数字ID} のサービスキー
 SERVICES = [
@@ -98,15 +96,20 @@ def fetch(url: str) -> bytes:
         return res.read()
 
 
-def nearest(pos: int, candidates: list[tuple[int, str]]) -> str | None:
+def nearest_bounded(pos: int, candidates: list[tuple[int, str]], lo: int, hi: int) -> str | None:
+    """[lo, hi) の範囲内(=1つ前の曲のlinkcoreから次の曲のlinkcoreの直前まで)に限定して
+    posに最も近い候補を返す。範囲を曲の境界(linkcoreの位置)で厳密に区切ることで、
+    隣の曲のタイトル・日付・ジャケットを誤って拾わないようにする。"""
     best = None
-    best_dist = WINDOW + 1
+    best_dist = None
     for cpos, value in candidates:
+        if not (lo <= cpos < hi):
+            continue
         dist = abs(cpos - pos)
-        if dist < best_dist:
+        if best_dist is None or dist < best_dist:
             best_dist = dist
             best = value
-    return best if best_dist <= WINDOW else None
+    return best
 
 
 def hash_of(link_url: str) -> str:
@@ -125,9 +128,12 @@ def scrape_current_tracks(html: str) -> list[dict]:
         (m.start(), unescape_json_fragment(m.group(0))) for m in ARTWORK_PAT.finditer(html)
     ]
 
+    link_matches = list(LINK_PAT.finditer(html))
+    link_positions = [m.start() for m in link_matches]
+
     seen_hash = set()
     tracks = []
-    for m in LINK_PAT.finditer(html):
+    for i, m in enumerate(link_matches):
         url = m.group(1)
         h = hash_of(url)
         if h in seen_hash:
@@ -135,9 +141,14 @@ def scrape_current_tracks(html: str) -> list[dict]:
         seen_hash.add(h)
 
         pos = m.start()
-        title = nearest(pos, names)
-        release_date = nearest(pos, dates)
-        artwork = nearest(pos, artworks)
+        # 曲の境界 = 1つ前の曲のlinkcore位置 〜 次の曲のlinkcore位置の直前。
+        # この範囲の外は別の曲のデータなので、たとえ文字上の距離が近くても採用しない。
+        lo = link_positions[i - 1] if i > 0 else 0
+        hi = link_positions[i + 1] if i + 1 < len(link_positions) else len(html)
+
+        title = nearest_bounded(pos, names, lo, hi)
+        release_date = nearest_bounded(pos, dates, lo, hi)
+        artwork = nearest_bounded(pos, artworks, lo, hi)
 
         if not title or not release_date or not artwork:
             print(f"[warn] incomplete data for {url}, skipping (title={title}, date={release_date}, artwork={bool(artwork)})", file=sys.stderr)
