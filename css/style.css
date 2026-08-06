@@ -194,7 +194,7 @@ button { font: inherit; cursor: pointer; }
 .hero-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.75) 100%);
+  background: none;
 }
 
 /* MCLロゴバッジ: スマホは左上、PCはフォローバーの右横に配置。
