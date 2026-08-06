@@ -208,8 +208,8 @@ button { font: inherit; cursor: pointer; }
   opacity: 0.94;
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 26px rgba(190, 160, 255, 0.3));
   pointer-events: none;
-  transform: rotate(-9deg);
-  top: 22%;
+  transform: rotate(-15deg);
+  top: 15%;
   left: 6%;
 }
 
@@ -217,9 +217,9 @@ button { font: inherit; cursor: pointer; }
   .hero-badge {
     top: auto;
     left: auto;
-    right: 6%;
+    right: 11%;
     bottom: 100px;
-    width: clamp(130px, 10vw, 190px);
+    width: clamp(140px, 11vw, 210px);
   }
 }
 
