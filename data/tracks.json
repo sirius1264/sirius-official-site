@@ -1,9 +1,25 @@
 [
   {
+    "title": "Street Lights",
+    "releaseDate": "2026-08-19",
+    "linkUrl": "https://linkco.re/B71zfnyx?lang=ja",
+    "jacket": "images/jackets/B71zfnyx.png",
+    "serviceLinks": {
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1898908"
+    }
+  },
+  {
     "title": "Summer edge",
     "releaseDate": "2026-08-12",
     "linkUrl": "https://linkco.re/7H5v9QNp?lang=ja",
-    "jacket": "images/jackets/7H5v9QNp.png"
+    "jacket": "images/jackets/7H5v9QNp.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1893264",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1893264",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1893264",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1893264",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1893264"
+    }
   },
   {
     "title": "Rising Star",
