@@ -1,9 +1,22 @@
 [
   {
+    "title": "Sirius",
+    "releaseDate": "2026-09-02",
+    "linkUrl": "https://linkco.re/Pz13Sub6?lang=ja",
+    "jacket": "images/jackets/Pz13Sub6.png"
+  },
+  {
     "title": "Your Color",
     "releaseDate": "2026-08-26",
     "linkUrl": "https://linkco.re/GMzxzHvG?lang=ja",
-    "jacket": "images/jackets/GMzxzHvG.png"
+    "jacket": "images/jackets/GMzxzHvG.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1914307",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1914307",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1914307",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1914307",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1914307"
+    }
   },
   {
     "title": "Street Lights",
