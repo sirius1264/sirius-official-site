@@ -112,6 +112,14 @@ def nearest_bounded(pos: int, candidates: list[tuple[int, str]], lo: int, hi: in
     return best
 
 
+# 曲1件分のJSONブロックが収まる最大文字数の目安(実測での曲間最大距離は約4200文字)。
+# 先頭/末尾の曲には「前の曲」「次の曲」のlinkcore位置という境界が無く lo=0 / hi=len(html)
+# にフォールバックしてしまうと、境界チェックが実質無効化されてページ冒頭・末尾の無関係な
+# データ(アーティスト名など)まで拾ってしまう。実際に新曲第1号のタイトルがアーティスト名
+# "Sirius" になってしまう不具合が起きたため、探索範囲をこの上限で必ず打ち切る。
+MAX_TRACK_SPAN = 6000
+
+
 def hash_of(link_url: str) -> str:
     return link_url.split("?")[0].rstrip("/").split("/")[-1]
 
@@ -143,8 +151,10 @@ def scrape_current_tracks(html: str) -> list[dict]:
         pos = m.start()
         # 曲の境界 = 1つ前の曲のlinkcore位置 〜 次の曲のlinkcore位置の直前。
         # この範囲の外は別の曲のデータなので、たとえ文字上の距離が近くても採用しない。
-        lo = link_positions[i - 1] if i > 0 else 0
-        hi = link_positions[i + 1] if i + 1 < len(link_positions) else len(html)
+        # 前後の曲が無い(先頭/末尾)場合も MAX_TRACK_SPAN で範囲を打ち切り、
+        # ページ全体まで境界が緩んでしまわないようにする。
+        lo = link_positions[i - 1] if i > 0 else max(0, pos - MAX_TRACK_SPAN)
+        hi = link_positions[i + 1] if i + 1 < len(link_positions) else min(len(html), pos + MAX_TRACK_SPAN)
 
         title = nearest_bounded(pos, names, lo, hi)
         release_date = nearest_bounded(pos, dates, lo, hi)
