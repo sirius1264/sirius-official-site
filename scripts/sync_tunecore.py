@@ -16,6 +16,12 @@ from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 
 ARTIST_URL = "https://www.tunecore.co.jp/artists?id=666152"
+# アーティスト自身の表示名。ページ末尾のアーティスト情報オブジェクトにも
+# "nameJa":"Sirius" という形で同じキーが使われており、新曲がリリース直前で
+# まだ曲名(songs/nameJa)がTuneCore側に登録されていない場合、境界内に曲名の
+# 候補が見つからず誤ってこの値を拾ってしまうことがある(実際に発生した不具合)。
+# 抽出結果がこの名前と一致した場合は取得失敗とみなしてスキップする。
+ARTIST_NAME = "Sirius"
 ROOT = Path(__file__).resolve().parent.parent
 TRACKS_JSON = ROOT / "data" / "tracks.json"
 EXCLUDED_JSON = ROOT / "data" / "excluded_tracks.json"
@@ -162,6 +168,15 @@ def scrape_current_tracks(html: str) -> list[dict]:
 
         if not title or not release_date or not artwork:
             print(f"[warn] incomplete data for {url}, skipping (title={title}, date={release_date}, artwork={bool(artwork)})", file=sys.stderr)
+            continue
+
+        if title == ARTIST_NAME:
+            print(
+                f"[warn] title for {url} resolved to the artist name ({ARTIST_NAME!r}) instead of "
+                "a song title — TuneCore's data for this track is likely still incomplete, "
+                "skipping (will retry next run)",
+                file=sys.stderr,
+            )
             continue
 
         tracks.append(
