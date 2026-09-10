@@ -1,9 +1,22 @@
 [
   {
+    "title": "No Rush",
+    "releaseDate": "2026-09-16",
+    "linkUrl": "https://linkco.re/Ff7aqTCf?lang=ja",
+    "jacket": "images/jackets/Ff7aqTCf.png"
+  },
+  {
     "title": "Quiet Glow",
     "releaseDate": "2026-09-09",
     "linkUrl": "https://linkco.re/fzXr3ZGD?lang=ja",
-    "jacket": "images/jackets/fzXr3ZGD.png"
+    "jacket": "images/jackets/fzXr3ZGD.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1933393",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1933393",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1933393",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1933393",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1933393"
+    }
   },
   {
     "title": "Urban Step",
