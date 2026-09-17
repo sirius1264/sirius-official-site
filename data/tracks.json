@@ -1,9 +1,22 @@
 [
   {
+    "title": "Easy Mode",
+    "releaseDate": "2026-09-23",
+    "linkUrl": "https://linkco.re/mZcePGad?lang=ja",
+    "jacket": "images/jackets/mZcePGad.jpg"
+  },
+  {
     "title": "No Rush",
     "releaseDate": "2026-09-16",
     "linkUrl": "https://linkco.re/Ff7aqTCf?lang=ja",
-    "jacket": "images/jackets/Ff7aqTCf.png"
+    "jacket": "images/jackets/Ff7aqTCf.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1944744",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1944744",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1944744",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1944744",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1944744"
+    }
   },
   {
     "title": "Quiet Glow",
