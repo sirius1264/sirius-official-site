@@ -4,8 +4,11 @@ TuneCore のアーティストページを毎日チェックし、新曲があ�
 data/tracks.json とジャケット画像、index.html の該当箇所を自動更新するスクリプト。
 
 TuneCore の公開APIは存在しないため、アーティストページに埋め込まれた
-Next.js のデータ(JSON文字列)を正規表現で読み取っている。TuneCore側の
-サイト実装が変わると動かなくなる可能性がある(非公式スクレイピング)。
+Next.js のデータ(<script id="__NEXT_DATA__"> のJSON)を読み取っている。
+曲名・配信日・ジャケットはJSON上で「リリース1件のオブジェクト」にまとまっているため、
+そのオブジェクトの値だけを使う(文字位置の近さで推測しない)。JSONが読めない場合に限り、
+従来の正規表現による推測(scrape_current_tracks_regex)に切り替える。
+TuneCore側のサイト実装が変わると動かなくなる可能性がある(非公式スクレイピング)。
 """
 
 import json
@@ -17,11 +20,13 @@ from pathlib import Path
 
 ARTIST_URL = "https://www.tunecore.co.jp/artists?id=666152"
 # アーティスト自身の表示名。ページ末尾のアーティスト情報オブジェクトにも
-# "nameJa":"Sirius" という形で同じキーが使われており、新曲がリリース直前で
-# まだ曲名(songs/nameJa)がTuneCore側に登録されていない場合、境界内に曲名の
-# 候補が見つからず誤ってこの値を拾ってしまうことがある(実際に発生した不具合)。
-# 抽出結果がこの名前と一致した場合は取得失敗とみなしてスキップする。
+# "nameJa":"Sirius" という形で同じキーが使われており、正規表現による予備の推測
+# (scrape_current_tracks_regex)では、新曲の曲名がまだ未登録の時に誤ってこの値を
+# 拾ってしまうことがある(実際に発生した不具合)。予備経路では、抽出結果がこの名前と
+# 一致した場合は取得失敗とみなしてスキップする。
 ARTIST_NAME = "Sirius"
+# 配信日がこの日数より前の曲は、ジャケットの再確認(refresh_recent_jackets)の対象外にする。
+JACKET_REFRESH_DAYS = 14
 ROOT = Path(__file__).resolve().parent.parent
 TRACKS_JSON = ROOT / "data" / "tracks.json"
 EXCLUDED_JSON = ROOT / "data" / "excluded_tracks.json"
@@ -135,7 +140,107 @@ def unescape_json_fragment(raw: str) -> str:
     return json.loads(f'"{raw}"')
 
 
+NEXT_DATA_PAT = re.compile(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', re.DOTALL)
+DATE_FORMAT_PAT = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def iter_releases(node):
+    """JSON全体から、リリース(曲)1件分のオブジェクト = linkcore と releaseDate を
+    両方持つ dict を再帰的に集める。"""
+    if isinstance(node, dict):
+        if "linkcore" in node and "releaseDate" in node:
+            yield node
+        for value in node.values():
+            yield from iter_releases(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from iter_releases(value)
+
+
+def release_artwork_url(release: dict) -> str | None:
+    """リリース自身の image オブジェクトからジャケットURLを取り出す。
+    medium(400x400、従来の ite<数字>)を優先し、無ければ large を使う。
+    URLに自分のリリースID(/r<ID>/)が含まれない画像(=アーティスト写真など別物)は採用しない。"""
+    image = release.get("image") or {}
+    release_id = release.get("id")
+    for key in ("medium", "large"):
+        url = (image.get(key) or {}).get("url")
+        if not url:
+            continue
+        if release_id is not None and f"/r{release_id}/" not in url:
+            print(
+                f"[warn] {key} image of release {release_id} is not its own artwork ({url.split('?')[0]}), ignoring",
+                file=sys.stderr,
+            )
+            continue
+        return url
+    return None
+
+
+def scrape_from_next_data(html: str) -> list[dict] | None:
+    """埋め込みJSON(__NEXT_DATA__)を解析して曲一覧を返す。JSONが見つからない・壊れている
+    場合は None(=呼び出し側で予備の正規表現に切り替える)。
+    曲名・配信日・ジャケットはすべて「そのリリースのオブジェクト」の値だけを使うので、
+    隣の曲やアーティスト情報を取り違えることがない。いずれかが未登録(登録直後など)の
+    曲は警告を出してスキップし、次回の同期で改めて取得する。"""
+    m = NEXT_DATA_PAT.search(html)
+    if not m:
+        return None
+    try:
+        data = json.loads(m.group(1))
+    except ValueError:
+        return None
+
+    seen_hash = set()
+    tracks = []
+    for release in iter_releases(data):
+        link = release.get("linkcore") or {}
+        url = link.get("url") or (f"https://linkco.re/{link['hash']}" if link.get("hash") else None)
+        if not url:
+            continue
+        h = link.get("hash") or hash_of(url)
+        if h in seen_hash:
+            continue
+        seen_hash.add(h)
+
+        title = release.get("nameJa") or release.get("nameEn")
+        release_date = release.get("releaseDate")
+        artwork = release_artwork_url(release)
+
+        if not title or not DATE_FORMAT_PAT.match(str(release_date or "")) or not artwork:
+            print(
+                f"[warn] incomplete data for {url}, skipping "
+                f"(title={title}, date={release_date}, artwork={bool(artwork)}) — will retry next run",
+                file=sys.stderr,
+            )
+            continue
+
+        tracks.append(
+            {
+                "hash": h,
+                "title": title,
+                "releaseDate": release_date,
+                "linkUrl": f"{url}?lang=ja",
+                "artworkUrl": artwork,
+            }
+        )
+    return tracks
+
+
 def scrape_current_tracks(html: str) -> list[dict]:
+    tracks = scrape_from_next_data(html)
+    if tracks is not None:
+        return tracks
+    print(
+        "[warn] __NEXT_DATA__ JSON not found or unreadable; falling back to regex-based scraping "
+        "(less reliable, TuneCore page structure may have changed)",
+        file=sys.stderr,
+    )
+    return scrape_current_tracks_regex(html)
+
+
+def scrape_current_tracks_regex(html: str) -> list[dict]:
+    """予備経路。JSONが読めない時だけ使う、文字位置の近さによる推測。"""
     names = [(m.start(), unescape_json_fragment(m.group(1))) for m in NAME_PAT.finditer(html)]
     dates = [(m.start(), m.group(1)) for m in DATE_PAT.finditer(html)]
     artworks = [
@@ -208,7 +313,32 @@ def known_hashes(known: list[dict]) -> set[str]:
     return {hash_of(t["linkUrl"]) for t in known}
 
 
-def download_artwork(url: str, hash_: str) -> str | None:
+def image_size(data: bytes) -> tuple[int, int] | None:
+    """PNG / JPEG のバイト列から (幅, 高さ) を読み取る。判別できなければ None。"""
+    if data[:8].startswith(b"\x89PNG") and len(data) >= 24:
+        return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+    if data[:3].startswith(b"\xff\xd8\xff"):
+        i = 2
+        while i + 9 < len(data):
+            if data[i] != 0xFF:
+                i += 1
+                continue
+            marker = data[i + 1]
+            if marker in (0xD8, 0x01) or 0xD0 <= marker <= 0xD7:
+                i += 2
+                continue
+            length = int.from_bytes(data[i + 2:i + 4], "big")
+            # SOF0〜SOF15(DHT=C4, JPG=C8, DAC=CC を除く)に画像サイズが入っている
+            if 0xC0 <= marker <= 0xCF and marker not in (0xC4, 0xC8, 0xCC):
+                return int.from_bytes(data[i + 7:i + 9], "big"), int.from_bytes(data[i + 5:i + 7], "big")
+            i += 2 + length
+    return None
+
+
+def fetch_artwork(url: str, hash_: str) -> tuple[bytes, str] | None:
+    """ジャケット画像を取得して検証し、(バイト列, 拡張子) を返す。
+    ジャケットは必ず正方形。正方形でない画像(アーティスト写真など、実際に取り違えた例がある)や
+    画像として壊れているものは採用せず None を返す(呼び出し側は次回の同期で再試行する)。"""
     try:
         data = fetch(url)
     except Exception as exc:  # noqa: BLE001
@@ -221,10 +351,64 @@ def download_artwork(url: str, hash_: str) -> str | None:
         print(f"[warn] downloaded artwork for {hash_} doesn't look like an image, skipping", file=sys.stderr)
         return None
 
+    size = image_size(data)
+    if not size or min(size) < 200 or abs(size[0] - size[1]) > max(size) * 0.02:
+        print(
+            f"[warn] downloaded artwork for {hash_} is not a square cover (size={size}), skipping",
+            file=sys.stderr,
+        )
+        return None
+
+    return data, ".png" if is_png else ".jpg"
+
+
+def download_artwork(url: str, hash_: str) -> str | None:
+    fetched = fetch_artwork(url, hash_)
+    if not fetched:
+        return None
+    data, ext = fetched
+
     JACKETS_DIR.mkdir(parents=True, exist_ok=True)
-    dest = JACKETS_DIR / f"{hash_}{'.png' if is_png else '.jpg'}"
+    dest = JACKETS_DIR / f"{hash_}{ext}"
     dest.write_bytes(data)
     return f"images/jackets/{dest.name}"
+
+
+def refresh_recent_jackets(known: list[dict], scraped: list[dict]) -> bool:
+    """配信日が直近(JACKET_REFRESH_DAYS日以内)〜配信予定の曲は、TuneCore側のジャケットを
+    毎回取得し直し、保存済みの画像と内容が違えば差し替える。
+    登録直後は本物のジャケットがまだ用意されておらず、後から差し替わることがあるため
+    (一度取り込んだ画像を二度と更新しないと、暫定・誤りの画像が残り続ける)。
+    TuneCoreの画像URLは毎回変わるが、同じ画像なら内容は同一なので、差分がなければ何もしない。
+    1件でも差し替えたら True を返す(呼び出し側でHTMLを再生成する)。"""
+    by_hash = {t["hash"]: t for t in scraped}
+    cutoff = date.today() - timedelta(days=JACKET_REFRESH_DAYS)
+    changed = False
+    for track in known:
+        if date.fromisoformat(track["releaseDate"]) < cutoff:
+            continue
+        h = track_hash(track)
+        source = by_hash.get(h)
+        if not source:
+            continue
+        fetched = fetch_artwork(source["artworkUrl"], h)
+        if not fetched:
+            continue
+        data, ext = fetched
+
+        current = ROOT / track["jacket"]
+        if current.exists() and current.read_bytes() == data:
+            continue
+
+        JACKETS_DIR.mkdir(parents=True, exist_ok=True)
+        dest = JACKETS_DIR / f"{h}{ext}"
+        dest.write_bytes(data)
+        if current != dest and current.exists():
+            current.unlink()  # 拡張子が変わった場合の旧ファイル
+        print(f"Replaced jacket for '{track['title']}': {track['jacket']} -> images/jackets/{dest.name}")
+        track["jacket"] = f"images/jackets/{dest.name}"
+        changed = True
+    return changed
 
 
 STORE_ID_PAT = {
@@ -486,11 +670,14 @@ def main() -> int:
         t for t in scraped
         if t["hash"] not in existing_hashes and t["hash"] not in excluded_hashes
     ]
-    if not new_tracks:
+    # 直近・配信予定の曲のジャケットが後から差し替わっていないか確認する(known を直接更新する)
+    refreshed = refresh_recent_jackets(known, scraped)
+    if not new_tracks and not refreshed:
         print("No new tracks. Nothing to do.")
         return 0
 
-    print(f"Found {len(new_tracks)} new track(s): {[t['title'] for t in new_tracks]}")
+    if new_tracks:
+        print(f"Found {len(new_tracks)} new track(s): {[t['title'] for t in new_tracks]}")
 
     updated = list(known)
     for t in new_tracks:
@@ -507,7 +694,7 @@ def main() -> int:
             }
         )
 
-    if len(updated) == len(known):
+    if len(updated) == len(known) and not refreshed:
         print("No track could be added (all downloads failed). Nothing to commit.")
         return 0
 
@@ -521,7 +708,10 @@ def main() -> int:
     update_music_html(updated)
     write_track_pages(updated)
 
-    print(f"Updated data/tracks.json, index.html, music.html and track pages with {len(updated) - len(known)} new track(s).")
+    print(
+        f"Updated data/tracks.json, index.html, music.html and track pages "
+        f"({len(updated) - len(known)} new track(s), jackets replaced: {refreshed})."
+    )
     return 0
 
 
