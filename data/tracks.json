@@ -214,19 +214,6 @@
     }
   },
   {
-    "title": "Summer Proof",
-    "releaseDate": "2026-05-20",
-    "linkUrl": "https://linkco.re/T519ZNRT",
-    "jacket": "images/jackets/summer-proof.png",
-    "serviceLinks": {
-      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1755102",
-      "spotify": "https://www.tunecore.co.jp/to/spotify/1755102",
-      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1755102",
-      "lineMusic": "https://www.tunecore.co.jp/to/line/1755102",
-      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1755102"
-    }
-  },
-  {
     "title": "No Name Night",
     "releaseDate": "2026-05-20",
     "linkUrl": "https://linkco.re/f4updgCf",
@@ -250,6 +237,19 @@
       "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1768426",
       "lineMusic": "https://www.tunecore.co.jp/to/line/1768426",
       "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1768426"
+    }
+  },
+  {
+    "title": "Summer Proof",
+    "releaseDate": "2026-05-13",
+    "linkUrl": "https://linkco.re/T519ZNRT",
+    "jacket": "images/jackets/summer-proof.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1755102",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1755102",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1755102",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1755102",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1755102"
     }
   },
   {
