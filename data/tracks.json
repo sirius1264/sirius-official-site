@@ -1,9 +1,25 @@
 [
   {
+    "title": "Side by Side",
+    "releaseDate": "2026-09-30",
+    "linkUrl": "https://linkco.re/xtDMh6hy?lang=ja",
+    "jacket": "images/jackets/xtDMh6hy.png",
+    "serviceLinks": {
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1965426"
+    }
+  },
+  {
     "title": "Easy Mode",
     "releaseDate": "2026-09-23",
     "linkUrl": "https://linkco.re/mZcePGad?lang=ja",
-    "jacket": "images/jackets/mZcePGad.png"
+    "jacket": "images/jackets/mZcePGad.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1954441",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1954441",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1954441",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1954441",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1954441"
+    }
   },
   {
     "title": "No Rush",
