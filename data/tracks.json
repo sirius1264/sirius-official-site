@@ -1,11 +1,21 @@
 [
   {
+    "title": "Off Script",
+    "releaseDate": "2026-10-07",
+    "linkUrl": "https://linkco.re/bmSaYnE4?lang=ja",
+    "jacket": "images/jackets/bmSaYnE4.png"
+  },
+  {
     "title": "Side by Side",
     "releaseDate": "2026-09-30",
     "linkUrl": "https://linkco.re/xtDMh6hy?lang=ja",
     "jacket": "images/jackets/xtDMh6hy.png",
     "serviceLinks": {
-      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1965426"
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1965426",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1965426",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1965426",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1965426",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1965426"
     }
   },
   {
