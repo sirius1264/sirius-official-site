@@ -3,7 +3,10 @@
     "title": "Off Script",
     "releaseDate": "2026-10-07",
     "linkUrl": "https://linkco.re/bmSaYnE4?lang=ja",
-    "jacket": "images/jackets/bmSaYnE4.png"
+    "jacket": "images/jackets/bmSaYnE4.png",
+    "serviceLinks": {
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1978285"
+    }
   },
   {
     "title": "Side by Side",

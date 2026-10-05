@@ -548,6 +548,9 @@ TRACK_PAGE_TEMPLATE = """<!DOCTYPE html>
 
   gtag('config', 'G-WNW84195G6');
 </script>
+
+<!-- Metricool tag -->
+<script>function loadScript(a){{var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}}loadScript(function(){{beTracker.t({{hash:"ca4f909e3d5fb7432f37bd0004c44730"}})}});</script>
 </head>
 <body>
 
