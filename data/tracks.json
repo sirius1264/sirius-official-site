@@ -1,11 +1,21 @@
 [
   {
+    "title": "Sunny Blues",
+    "releaseDate": "2026-10-14",
+    "linkUrl": "https://linkco.re/YHYC21Tt?lang=ja",
+    "jacket": "images/jackets/YHYC21Tt.png"
+  },
+  {
     "title": "Off Script",
     "releaseDate": "2026-10-07",
     "linkUrl": "https://linkco.re/bmSaYnE4?lang=ja",
     "jacket": "images/jackets/bmSaYnE4.png",
     "serviceLinks": {
-      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1978285"
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1978285",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1978285",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1978285",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1978285",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1978285"
     }
   },
   {
