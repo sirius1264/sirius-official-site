@@ -1,9 +1,22 @@
 [
   {
+    "title": "Your Mind",
+    "releaseDate": "2026-10-21",
+    "linkUrl": "https://linkco.re/pzGZHFmn?lang=ja",
+    "jacket": "images/jackets/pzGZHFmn.png"
+  },
+  {
     "title": "Sunny Blues",
     "releaseDate": "2026-10-14",
     "linkUrl": "https://linkco.re/YHYC21Tt?lang=ja",
-    "jacket": "images/jackets/YHYC21Tt.png"
+    "jacket": "images/jackets/YHYC21Tt.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1991466",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1991466",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1991466",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1991466",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1991466"
+    }
   },
   {
     "title": "Off Script",
