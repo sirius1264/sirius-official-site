@@ -1,9 +1,22 @@
 [
   {
+    "title": "Velvet Night",
+    "releaseDate": "2026-10-28",
+    "linkUrl": "https://linkco.re/UTEtsdtC?lang=ja",
+    "jacket": "images/jackets/UTEtsdtC.png"
+  },
+  {
     "title": "Your Mind",
     "releaseDate": "2026-10-21",
     "linkUrl": "https://linkco.re/pzGZHFmn?lang=ja",
-    "jacket": "images/jackets/pzGZHFmn.png"
+    "jacket": "images/jackets/pzGZHFmn.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/1997906",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/1997906",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/1997906",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/1997906",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/1997906"
+    }
   },
   {
     "title": "Sunny Blues",
