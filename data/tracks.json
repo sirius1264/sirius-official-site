@@ -1,9 +1,22 @@
 [
   {
+    "title": "Two Truths",
+    "releaseDate": "2026-11-04",
+    "linkUrl": "https://linkco.re/69MPSbTP?lang=ja",
+    "jacket": "images/jackets/69MPSbTP.png"
+  },
+  {
     "title": "Velvet Night",
     "releaseDate": "2026-10-28",
     "linkUrl": "https://linkco.re/UTEtsdtC?lang=ja",
-    "jacket": "images/jackets/UTEtsdtC.png"
+    "jacket": "images/jackets/UTEtsdtC.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/2007835",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/2007835",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/2007835",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/2007835",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/2007835"
+    }
   },
   {
     "title": "Your Mind",
