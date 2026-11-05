@@ -1,9 +1,25 @@
 [
   {
+    "title": "Someday",
+    "releaseDate": "2026-11-11",
+    "linkUrl": "https://linkco.re/dvsXQf0u?lang=ja",
+    "jacket": "images/jackets/dvsXQf0u.png",
+    "serviceLinks": {
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/2037519"
+    }
+  },
+  {
     "title": "Two Truths",
     "releaseDate": "2026-11-04",
     "linkUrl": "https://linkco.re/69MPSbTP?lang=ja",
-    "jacket": "images/jackets/69MPSbTP.png"
+    "jacket": "images/jackets/69MPSbTP.png",
+    "serviceLinks": {
+      "appleMusic": "https://www.tunecore.co.jp/to/apple_music/2023057",
+      "spotify": "https://www.tunecore.co.jp/to/spotify/2023057",
+      "youtubeMusic": "https://www.tunecore.co.jp/to/youtube_music_key/2023057",
+      "lineMusic": "https://www.tunecore.co.jp/to/line/2023057",
+      "amazonMusic": "https://www.tunecore.co.jp/to/amazon_music_unlimited/2023057"
+    }
   },
   {
     "title": "Velvet Night",
